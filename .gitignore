@@ -4,5 +4,6 @@ target/
 .classpath
 *iml
 .idea
+.DS_Store
 logs/
 config/

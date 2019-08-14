@@ -9,6 +9,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.internal.util.StringUtility;
+import org.mybatis.generator.ui.AppProperties;
 
 /**
  * 自定义CommentGenerator
@@ -135,7 +136,7 @@ public class CustomizationCommentGenerator extends DefaultCommentGenerator {
     javaElement.addJavaDocLine(" *");
     StringBuilder sb = new StringBuilder();
     sb.append(" * ");
-    sb.append("@author xionghui");
+    sb.append("@author "+ AppProperties.getValue("author"));
     javaElement.addJavaDocLine(sb.toString());
     sb.setLength(0);
     sb.append(" * ");

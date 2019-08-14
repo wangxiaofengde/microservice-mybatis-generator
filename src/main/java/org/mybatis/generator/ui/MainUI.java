@@ -1,6 +1,9 @@
 package org.mybatis.generator.ui;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -54,5 +57,7 @@ public class MainUI extends Application {
 
     MainUIController controller = fxmlLoader.getController();
     controller.setPrimaryStage(primaryStage);
+    AppProperties appPro = new AppProperties();
+    appPro.init();
   }
 }

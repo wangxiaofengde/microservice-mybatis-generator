@@ -9,56 +9,55 @@ import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 
 /**
- *
  * @author xionghui
  */
 public class DeleteInElementGenerator extends AbstractXmlElementGenerator {
 
-  public DeleteInElementGenerator() {
-    super();
-  }
-
-  @Override
-  public void addElements(XmlElement parentElement) {
-    List<IntrospectedColumn> primaryKeyColumns = this.introspectedTable.getPrimaryKeyColumns();
-    if (primaryKeyColumns == null || primaryKeyColumns.size() != 1) {
-      return;
+    public DeleteInElementGenerator() {
+        super();
     }
 
-    IntrospectedColumn introspectedColumn = primaryKeyColumns.get(0);
+    @Override
+    public void addElements(XmlElement parentElement) {
+        List<IntrospectedColumn> primaryKeyColumns = this.introspectedTable.getPrimaryKeyColumns();
+        if (primaryKeyColumns == null || primaryKeyColumns.size() != 1) {
+            return;
+        }
 
-    XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
+        IntrospectedColumn introspectedColumn = primaryKeyColumns.get(0);
 
-    answer.addAttribute(new Attribute("id", "deleteIn")); //$NON-NLS-1$
-    answer.addAttribute(new Attribute("parameterType", "java.util.Map")); //$NON-NLS-1$
+        XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
-    this.context.getCommentGenerator().addComment(answer);
+        answer.addAttribute(new Attribute("id", "deleteIn")); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterType", "java.util.Map")); //$NON-NLS-1$
 
-    answer.addElement(new TextElement("delete from "));
-    answer.addElement(this.getTableNameIncludeElement());
+        this.context.getCommentGenerator().addComment(answer);
 
-    StringBuilder sb = new StringBuilder();
-    sb.append("where ");
-    sb.append(MyBatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
-    sb.append(" in ");
-    answer.addElement(new TextElement(sb.toString()));
-    sb.setLength(0);
+        answer.addElement(new TextElement("delete from "));
+        answer.addElement(this.getTableNameIncludeElement());
 
-    XmlElement foreachElement = new XmlElement("foreach");
-    foreachElement.addAttribute(new Attribute("collection", "records"));
-    foreachElement.addAttribute(new Attribute("item", "record"));
-    foreachElement.addAttribute(new Attribute("index", "index"));
-    foreachElement.addAttribute(new Attribute("open", "("));
-    foreachElement.addAttribute(new Attribute("separator", ","));
-    foreachElement.addAttribute(new Attribute("close", ")"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("where ");
+        sb.append(MyBatis3FormattingUtilities.getAliasedEscapedColumnName(introspectedColumn));
+        sb.append(" in ");
+        answer.addElement(new TextElement(sb.toString()));
+        sb.setLength(0);
 
-    foreachElement.addElement(new TextElement(
-        MyBatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")));
-    answer.addElement(foreachElement);
+        XmlElement foreachElement = new XmlElement("foreach");
+        foreachElement.addAttribute(new Attribute("collection", "records"));
+        foreachElement.addAttribute(new Attribute("item", "record"));
+        foreachElement.addAttribute(new Attribute("index", "index"));
+        foreachElement.addAttribute(new Attribute("open", "("));
+        foreachElement.addAttribute(new Attribute("separator", ","));
+        foreachElement.addAttribute(new Attribute("close", ")"));
 
-    if (this.context.getPlugins().sqlMapDeleteByExampleElementGenerated(answer,
-        this.introspectedTable)) {
-      parentElement.addElement(answer);
+        foreachElement.addElement(new TextElement(
+                MyBatis3FormattingUtilities.getParameterClause(introspectedColumn, "record.")));
+        answer.addElement(foreachElement);
+
+        if (this.context.getPlugins().sqlMapDeleteByExampleElementGenerated(answer,
+                this.introspectedTable)) {
+            parentElement.addElement(answer);
+        }
     }
-  }
 }

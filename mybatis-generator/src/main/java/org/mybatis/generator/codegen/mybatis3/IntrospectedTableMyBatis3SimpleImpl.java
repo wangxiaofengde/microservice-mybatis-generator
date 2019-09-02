@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2017 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -30,52 +30,52 @@ import org.mybatis.generator.internal.ObjectFactory;
  *
  */
 public class IntrospectedTableMyBatis3SimpleImpl extends IntrospectedTableMyBatis3Impl {
-  public IntrospectedTableMyBatis3SimpleImpl() {
-    super();
-  }
-
-  @Override
-  protected void calculateXmlMapperGenerator(AbstractJavaClientGenerator javaClientGenerator,
-      List<String> warnings, ProgressCallback progressCallback) {
-    if (javaClientGenerator == null) {
-      if (this.context.getSqlMapGeneratorConfiguration() != null) {
-        this.xmlMapperGenerator = new SimpleXMLMapperGenerator();
-      }
-    } else {
-      this.xmlMapperGenerator = javaClientGenerator.getMatchedXMLGenerator();
+    public IntrospectedTableMyBatis3SimpleImpl() {
+        super();
     }
 
-    this.initializeAbstractGenerator(this.xmlMapperGenerator, warnings, progressCallback);
-  }
+    @Override
+    protected void calculateXmlMapperGenerator(AbstractJavaClientGenerator javaClientGenerator,
+                                               List<String> warnings, ProgressCallback progressCallback) {
+        if (javaClientGenerator == null) {
+            if (this.context.getSqlMapGeneratorConfiguration() != null) {
+                this.xmlMapperGenerator = new SimpleXMLMapperGenerator();
+            }
+        } else {
+            this.xmlMapperGenerator = javaClientGenerator.getMatchedXMLGenerator();
+        }
 
-  @Override
-  protected AbstractJavaClientGenerator createJavaClientGenerator() {
-    if (this.context.getJavaClientGeneratorConfiguration() == null) {
-      return null;
+        this.initializeAbstractGenerator(this.xmlMapperGenerator, warnings, progressCallback);
     }
 
-    String type = this.context.getJavaClientGeneratorConfiguration().getConfigurationType();
+    @Override
+    protected AbstractJavaClientGenerator createJavaClientGenerator() {
+        if (this.context.getJavaClientGeneratorConfiguration() == null) {
+            return null;
+        }
 
-    AbstractJavaClientGenerator javaGenerator;
-    if ("XMLMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-      javaGenerator = new SimpleJavaClientGenerator();
-    } else if ("ANNOTATEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-      javaGenerator = new SimpleAnnotatedClientGenerator();
-    } else if ("MAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
-      javaGenerator = new SimpleJavaClientGenerator();
-    } else {
-      javaGenerator = (AbstractJavaClientGenerator) ObjectFactory.createInternalObject(type);
+        String type = this.context.getJavaClientGeneratorConfiguration().getConfigurationType();
+
+        AbstractJavaClientGenerator javaGenerator;
+        if ("XMLMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new SimpleJavaClientGenerator();
+        } else if ("ANNOTATEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new SimpleAnnotatedClientGenerator();
+        } else if ("MAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new SimpleJavaClientGenerator();
+        } else {
+            javaGenerator = (AbstractJavaClientGenerator) ObjectFactory.createInternalObject(type);
+        }
+
+        return javaGenerator;
     }
 
-    return javaGenerator;
-  }
+    @Override
+    protected void calculateJavaModelGenerators(List<String> warnings,
+                                                ProgressCallback progressCallback) {
 
-  @Override
-  protected void calculateJavaModelGenerators(List<String> warnings,
-      ProgressCallback progressCallback) {
-
-    AbstractJavaGenerator javaGenerator = new SimpleModelGenerator();
-    this.initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
-    this.javaModelGenerators.add(javaGenerator);
-  }
+        AbstractJavaGenerator javaGenerator = new SimpleModelGenerator();
+        this.initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+        this.javaModelGenerators.add(javaGenerator);
+    }
 }

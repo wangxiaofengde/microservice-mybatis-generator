@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2017 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -19,45 +19,45 @@ import java.util.Set;
 /**
  * This interface describes methods common to all Java compilation units (Java classes, interfaces,
  * and enums).
- * 
+ *
  * @author Jeff Butler
  */
 public interface CompilationUnit {
 
-  String getFormattedContent();
+    String getFormattedContent();
 
-  Set<FullyQualifiedJavaType> getImportedTypes();
+    Set<FullyQualifiedJavaType> getImportedTypes();
 
-  Set<String> getStaticImports();
+    Set<String> getStaticImports();
 
-  FullyQualifiedJavaType getSuperClass();
+    FullyQualifiedJavaType getSuperClass();
 
-  boolean isJavaInterface();
+    boolean isJavaInterface();
 
-  boolean isJavaEnumeration();
+    boolean isJavaEnumeration();
 
-  Set<FullyQualifiedJavaType> getSuperInterfaceTypes();
+    Set<FullyQualifiedJavaType> getSuperInterfaceTypes();
 
-  FullyQualifiedJavaType getType();
+    FullyQualifiedJavaType getType();
 
-  void addImportedType(FullyQualifiedJavaType importedType);
+    void addImportedType(FullyQualifiedJavaType importedType);
 
-  void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes);
+    void addImportedTypes(Set<FullyQualifiedJavaType> importedTypes);
 
-  void addStaticImport(String staticImport);
+    void addStaticImport(String staticImport);
 
-  void addStaticImports(Set<String> staticImports);
+    void addStaticImports(Set<String> staticImports);
 
-  /**
-   * Comments will be written at the top of the file as is, we do not append any start or end
-   * comment characters.
-   * 
-   * <p>
-   * Note that in the Eclipse plugin, file comments will not be merged.
-   *
-   * @param commentLine the comment line
-   */
-  void addFileCommentLine(String commentLine);
+    /**
+     * Comments will be written at the top of the file as is, we do not append any start or end
+     * comment characters.
+     *
+     * <p>
+     * Note that in the Eclipse plugin, file comments will not be merged.
+     *
+     * @param commentLine the comment line
+     */
+    void addFileCommentLine(String commentLine);
 
-  List<String> getFileCommentLines();
+    List<String> getFileCommentLines();
 }

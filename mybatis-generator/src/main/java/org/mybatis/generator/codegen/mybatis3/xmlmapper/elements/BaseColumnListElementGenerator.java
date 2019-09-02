@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2016 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -30,45 +30,45 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
  */
 public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator {
 
-  public BaseColumnListElementGenerator() {
-    super();
-  }
-
-  @Override
-  public void addElements(XmlElement parentElement) {
-    XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
-
-    answer.addAttribute(new Attribute("id", //$NON-NLS-1$
-        this.introspectedTable.getBaseColumnListId()));
-
-    this.context.getCommentGenerator().addComment(answer);
-
-    Set<String> idSet = new HashSet<>();
-    for (IntrospectedColumn primaryKeyColumns : this.introspectedTable.getPrimaryKeyColumns()) {
-      idSet.add(MyBatis3FormattingUtilities.getEscapedColumnName(primaryKeyColumns).toLowerCase());
+    public BaseColumnListElementGenerator() {
+        super();
     }
 
-    Iterator<IntrospectedColumn> iter = this.introspectedTable.getNonBLOBColumns().iterator();
-    while (iter.hasNext()) {
-      String column = MyBatis3FormattingUtilities.getSelectListPhrase(iter.next());
-      // with id
-      if (idSet.contains(column.toLowerCase())) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(column);
-        sb.append(", "); //$NON-NLS-1$
-        answer.addElement(new TextElement(sb.toString()));
-        sb.setLength(0);
-      }
-    }
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
 
-    XmlElement includeElement = new XmlElement("include");
-    includeElement.addAttribute(
-        new Attribute("refid", this.introspectedTable.getBaseColumnListId() + "_Without_Id"));
-    answer.addElement(includeElement);
+        answer.addAttribute(new Attribute("id", //$NON-NLS-1$
+                this.introspectedTable.getBaseColumnListId()));
 
-    if (this.context.getPlugins().sqlMapBaseColumnListElementGenerated(answer,
-        this.introspectedTable)) {
-      parentElement.addElement(answer);
+        this.context.getCommentGenerator().addComment(answer);
+
+        Set<String> idSet = new HashSet<>();
+        for (IntrospectedColumn primaryKeyColumns : this.introspectedTable.getPrimaryKeyColumns()) {
+            idSet.add(MyBatis3FormattingUtilities.getEscapedColumnName(primaryKeyColumns).toLowerCase());
+        }
+
+        Iterator<IntrospectedColumn> iter = this.introspectedTable.getNonBLOBColumns().iterator();
+        while (iter.hasNext()) {
+            String column = MyBatis3FormattingUtilities.getSelectListPhrase(iter.next());
+            // with id
+            if (idSet.contains(column.toLowerCase())) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(column);
+                sb.append(", "); //$NON-NLS-1$
+                answer.addElement(new TextElement(sb.toString()));
+                sb.setLength(0);
+            }
+        }
+
+        XmlElement includeElement = new XmlElement("include");
+        includeElement.addAttribute(
+                new Attribute("refid", this.introspectedTable.getBaseColumnListId() + "_Without_Id"));
+        answer.addElement(includeElement);
+
+        if (this.context.getPlugins().sqlMapBaseColumnListElementGenerated(answer,
+                this.introspectedTable)) {
+            parentElement.addElement(answer);
+        }
     }
-  }
 }

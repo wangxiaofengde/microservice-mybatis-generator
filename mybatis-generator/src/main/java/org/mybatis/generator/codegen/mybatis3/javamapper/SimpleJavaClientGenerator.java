@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2017 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -41,109 +41,109 @@ import org.mybatis.generator.config.PropertyRegistry;
  */
 public class SimpleJavaClientGenerator extends AbstractJavaClientGenerator {
 
-  public SimpleJavaClientGenerator() {
-    super(true);
-  }
-
-  public SimpleJavaClientGenerator(boolean requiresMatchedXMLGenerator) {
-    super(requiresMatchedXMLGenerator);
-  }
-
-  @Override
-  public List<CompilationUnit> getCompilationUnits() {
-    this.progressCallback.startTask(getString("Progress.17", //$NON-NLS-1$
-        this.introspectedTable.getFullyQualifiedTable().toString()));
-    CommentGenerator commentGenerator = this.context.getCommentGenerator();
-
-    FullyQualifiedJavaType type =
-        new FullyQualifiedJavaType(this.introspectedTable.getMyBatis3JavaMapperType());
-    Interface interfaze = new Interface(type);
-    interfaze.setVisibility(JavaVisibility.PUBLIC);
-    commentGenerator.addJavaFileComment(interfaze);
-
-    String rootInterface =
-        this.introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
-    if (!stringHasValue(rootInterface)) {
-      rootInterface = this.context.getJavaClientGeneratorConfiguration()
-          .getProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
+    public SimpleJavaClientGenerator() {
+        super(true);
     }
 
-    if (stringHasValue(rootInterface)) {
-      FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(rootInterface);
-      interfaze.addSuperInterface(fqjt);
-      interfaze.addImportedType(fqjt);
+    public SimpleJavaClientGenerator(boolean requiresMatchedXMLGenerator) {
+        super(requiresMatchedXMLGenerator);
     }
 
-    this.addDeleteByPrimaryKeyMethod(interfaze);
-    this.addInsertMethod(interfaze);
-    this.addSelectByPrimaryKeyMethod(interfaze);
-    this.addSelectAllMethod(interfaze);
-    this.addUpdateByPrimaryKeyMethod(interfaze);
+    @Override
+    public List<CompilationUnit> getCompilationUnits() {
+        this.progressCallback.startTask(getString("Progress.17", //$NON-NLS-1$
+                this.introspectedTable.getFullyQualifiedTable().toString()));
+        CommentGenerator commentGenerator = this.context.getCommentGenerator();
 
-    List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
-    if (this.context.getPlugins().clientGenerated(interfaze, null, this.introspectedTable)) {
-      answer.add(interfaze);
+        FullyQualifiedJavaType type =
+                new FullyQualifiedJavaType(this.introspectedTable.getMyBatis3JavaMapperType());
+        Interface interfaze = new Interface(type);
+        interfaze.setVisibility(JavaVisibility.PUBLIC);
+        commentGenerator.addJavaFileComment(interfaze);
+
+        String rootInterface =
+                this.introspectedTable.getTableConfigurationProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
+        if (!stringHasValue(rootInterface)) {
+            rootInterface = this.context.getJavaClientGeneratorConfiguration()
+                    .getProperty(PropertyRegistry.ANY_ROOT_INTERFACE);
+        }
+
+        if (stringHasValue(rootInterface)) {
+            FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(rootInterface);
+            interfaze.addSuperInterface(fqjt);
+            interfaze.addImportedType(fqjt);
+        }
+
+        this.addDeleteByPrimaryKeyMethod(interfaze);
+        this.addInsertMethod(interfaze);
+        this.addSelectByPrimaryKeyMethod(interfaze);
+        this.addSelectAllMethod(interfaze);
+        this.addUpdateByPrimaryKeyMethod(interfaze);
+
+        List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
+        if (this.context.getPlugins().clientGenerated(interfaze, null, this.introspectedTable)) {
+            answer.add(interfaze);
+        }
+
+        List<CompilationUnit> extraCompilationUnits = this.getExtraCompilationUnits();
+        if (extraCompilationUnits != null) {
+            answer.addAll(extraCompilationUnits);
+        }
+
+        return answer;
     }
 
-    List<CompilationUnit> extraCompilationUnits = this.getExtraCompilationUnits();
-    if (extraCompilationUnits != null) {
-      answer.addAll(extraCompilationUnits);
+    protected void addDeleteByPrimaryKeyMethod(Interface interfaze) {
+        if (this.introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            AbstractJavaMapperMethodGenerator methodGenerator =
+                    new DeleteByPrimaryKeyMethodGenerator(true);
+            this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
     }
 
-    return answer;
-  }
-
-  protected void addDeleteByPrimaryKeyMethod(Interface interfaze) {
-    if (this.introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-      AbstractJavaMapperMethodGenerator methodGenerator =
-          new DeleteByPrimaryKeyMethodGenerator(true);
-      this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+    protected void addInsertMethod(Interface interfaze) {
+        if (this.introspectedTable.getRules().generateInsert()) {
+            AbstractJavaMapperMethodGenerator methodGenerator = new InsertMethodGenerator(true);
+            this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
     }
-  }
 
-  protected void addInsertMethod(Interface interfaze) {
-    if (this.introspectedTable.getRules().generateInsert()) {
-      AbstractJavaMapperMethodGenerator methodGenerator = new InsertMethodGenerator(true);
-      this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+    protected void addSelectByPrimaryKeyMethod(Interface interfaze) {
+        if (this.introspectedTable.getRules().generateSelectByPrimaryKey()) {
+            AbstractJavaMapperMethodGenerator methodGenerator =
+                    new SelectByPrimaryKeyMethodGenerator(true);
+            this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
     }
-  }
 
-  protected void addSelectByPrimaryKeyMethod(Interface interfaze) {
-    if (this.introspectedTable.getRules().generateSelectByPrimaryKey()) {
-      AbstractJavaMapperMethodGenerator methodGenerator =
-          new SelectByPrimaryKeyMethodGenerator(true);
-      this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+    protected void addSelectAllMethod(Interface interfaze) {
+        AbstractJavaMapperMethodGenerator methodGenerator = new SelectAllMethodGenerator();
+        this.initializeAndExecuteGenerator(methodGenerator, interfaze);
     }
-  }
 
-  protected void addSelectAllMethod(Interface interfaze) {
-    AbstractJavaMapperMethodGenerator methodGenerator = new SelectAllMethodGenerator();
-    this.initializeAndExecuteGenerator(methodGenerator, interfaze);
-  }
-
-  protected void addUpdateByPrimaryKeyMethod(Interface interfaze) {
-    if (this.introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
-      AbstractJavaMapperMethodGenerator methodGenerator =
-          new UpdateByPrimaryKeyWithoutBLOBsMethodGenerator();
-      this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+    protected void addUpdateByPrimaryKeyMethod(Interface interfaze) {
+        if (this.introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+            AbstractJavaMapperMethodGenerator methodGenerator =
+                    new UpdateByPrimaryKeyWithoutBLOBsMethodGenerator();
+            this.initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
     }
-  }
 
-  protected void initializeAndExecuteGenerator(AbstractJavaMapperMethodGenerator methodGenerator,
-      Interface interfaze) {
-    methodGenerator.setContext(this.context);
-    methodGenerator.setIntrospectedTable(this.introspectedTable);
-    methodGenerator.setProgressCallback(this.progressCallback);
-    methodGenerator.setWarnings(this.warnings);
-    methodGenerator.addInterfaceElements(interfaze);
-  }
+    protected void initializeAndExecuteGenerator(AbstractJavaMapperMethodGenerator methodGenerator,
+                                                 Interface interfaze) {
+        methodGenerator.setContext(this.context);
+        methodGenerator.setIntrospectedTable(this.introspectedTable);
+        methodGenerator.setProgressCallback(this.progressCallback);
+        methodGenerator.setWarnings(this.warnings);
+        methodGenerator.addInterfaceElements(interfaze);
+    }
 
-  public List<CompilationUnit> getExtraCompilationUnits() {
-    return null;
-  }
+    public List<CompilationUnit> getExtraCompilationUnits() {
+        return null;
+    }
 
-  @Override
-  public AbstractXmlGenerator getMatchedXMLGenerator() {
-    return new SimpleXMLMapperGenerator();
-  }
+    @Override
+    public AbstractXmlGenerator getMatchedXMLGenerator() {
+        return new SimpleXMLMapperGenerator();
+    }
 }

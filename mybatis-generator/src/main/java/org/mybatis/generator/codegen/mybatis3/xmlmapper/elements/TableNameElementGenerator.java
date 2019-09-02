@@ -9,24 +9,24 @@ import org.mybatis.generator.api.dom.xml.XmlElement;
  */
 public class TableNameElementGenerator extends AbstractXmlElementGenerator {
 
-  public TableNameElementGenerator() {
-    super();
-  }
-
-  @Override
-  public void addElements(XmlElement parentElement) {
-    XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
-
-    answer.addAttribute(new Attribute("id", "Table_Name"));
-
-    this.context.getCommentGenerator().addComment(answer);
-
-    answer.addElement(
-        new TextElement(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime()));
-
-    if (this.context.getPlugins().sqlMapBaseColumnListElementGenerated(answer,
-        this.introspectedTable)) {
-      parentElement.addElement(answer);
+    public TableNameElementGenerator() {
+        super();
     }
-  }
+
+    @Override
+    public void addElements(XmlElement parentElement) {
+        XmlElement answer = new XmlElement("sql"); //$NON-NLS-1$
+
+        answer.addAttribute(new Attribute("id", "Table_Name"));
+
+        this.context.getCommentGenerator().addComment(answer);
+
+        answer.addElement(
+                new TextElement(this.introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime()));
+
+        if (this.context.getPlugins().sqlMapBaseColumnListElementGenerated(answer,
+                this.introspectedTable)) {
+            parentElement.addElement(answer);
+        }
+    }
 }

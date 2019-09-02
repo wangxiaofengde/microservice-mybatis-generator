@@ -20,76 +20,76 @@ import javafx.scene.layout.HBox;
 
 @SuppressWarnings("restriction")
 public class GeneratorConfigController extends BaseFXController {
-  @FXML
-  private TableView<GeneratorConfig> configTable;
-  @FXML
-  private TableColumn<Object, Object> nameColumn;
-  @FXML
-  private TableColumn<Object, Object> opsColumn;
+    @FXML
+    private TableView<GeneratorConfig> configTable;
+    @FXML
+    private TableColumn<Object, Object> nameColumn;
+    @FXML
+    private TableColumn<Object, Object> opsColumn;
 
-  private MainUIController mainUIController;
+    private MainUIController mainUIController;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-    // 自定义操作列
-    this.opsColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-    this.opsColumn.setCellFactory(cell -> {
-      return new TableCell<Object, Object>() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        // 自定义操作列
+        this.opsColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        this.opsColumn.setCellFactory(cell -> {
+            return new TableCell<Object, Object>() {
 
-        @Override
-        public void updateItem(Object item, boolean empty) {
-          super.updateItem(item, empty);
-          if (item == null || empty) {
-            this.setText(null);
-            this.setGraphic(null);
-          } else {
-            Button btn1 = new Button("应用");
-            Button btn2 = new Button("删除");
-            HBox hBox = new HBox();
-            hBox.setSpacing(10);
-            hBox.getChildren().add(btn1);
-            hBox.getChildren().add(btn2);
-            btn1.setOnAction(event -> {
-              try {
-                // 应用配置
-                GeneratorConfig generatorConfig = ConfigHelper.loadGeneratorConfig(item.toString());
-                GeneratorConfigController.this.mainUIController
-                    .setGeneratorConfigIntoUI(generatorConfig);
-                GeneratorConfigController.this.closeDialogStage();
-              } catch (Exception e) {
-                AlertUtil.showErrorAlert(e.getMessage());
-              }
-            });
-            btn2.setOnAction(event -> {
-              if (AlertUtil.showAndWaitWarnAlert("确认删除？", ButtonType.NO, ButtonType.OK)) {
-                try {
-                  // 删除配置
-                  ConfigHelper.deleteGeneratorConfig(item.toString());
-                  GeneratorConfigController.this.refreshTableView();
-                } catch (Exception e) {
-                  AlertUtil.showErrorAlert(e.getMessage());
+                @Override
+                public void updateItem(Object item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item == null || empty) {
+                        this.setText(null);
+                        this.setGraphic(null);
+                    } else {
+                        Button btn1 = new Button("应用");
+                        Button btn2 = new Button("删除");
+                        HBox hBox = new HBox();
+                        hBox.setSpacing(10);
+                        hBox.getChildren().add(btn1);
+                        hBox.getChildren().add(btn2);
+                        btn1.setOnAction(event -> {
+                            try {
+                                // 应用配置
+                                GeneratorConfig generatorConfig = ConfigHelper.loadGeneratorConfig(item.toString());
+                                GeneratorConfigController.this.mainUIController
+                                        .setGeneratorConfigIntoUI(generatorConfig);
+                                GeneratorConfigController.this.closeDialogStage();
+                            } catch (Exception e) {
+                                AlertUtil.showErrorAlert(e.getMessage());
+                            }
+                        });
+                        btn2.setOnAction(event -> {
+                            if (AlertUtil.showAndWaitWarnAlert("确认删除？", ButtonType.NO, ButtonType.OK)) {
+                                try {
+                                    // 删除配置
+                                    ConfigHelper.deleteGeneratorConfig(item.toString());
+                                    GeneratorConfigController.this.refreshTableView();
+                                } catch (Exception e) {
+                                    AlertUtil.showErrorAlert(e.getMessage());
+                                }
+                            }
+                        });
+                        this.setGraphic(hBox);
+                    }
                 }
-              }
-            });
-            this.setGraphic(hBox);
-          }
-        }
-      };
-    });
-    this.refreshTableView();
-  }
-
-  private void refreshTableView() {
-    try {
-      List<GeneratorConfig> configs = ConfigHelper.loadGeneratorConfigs();
-      this.configTable.setItems(FXCollections.observableList(configs));
-    } catch (Exception e) {
-      AlertUtil.showErrorAlert(e.getMessage());
+            };
+        });
+        this.refreshTableView();
     }
-  }
 
-  void setMainUIController(MainUIController mainUIController) {
-    this.mainUIController = mainUIController;
-  }
+    private void refreshTableView() {
+        try {
+            List<GeneratorConfig> configs = ConfigHelper.loadGeneratorConfigs();
+            this.configTable.setItems(FXCollections.observableList(configs));
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert(e.getMessage());
+        }
+    }
+
+    void setMainUIController(MainUIController mainUIController) {
+        this.mainUIController = mainUIController;
+    }
 }

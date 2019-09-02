@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2017 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -28,95 +28,95 @@ import org.mybatis.generator.codegen.mybatis3.ListUtilities;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.UpdateByPrimaryKeyWithoutBLOBsMethodGenerator;
 
 /**
- * 
+ *
  * @author Jeff Butler
  */
 public class AnnotatedUpdateByPrimaryKeyWithoutBLOBsMethodGenerator
-    extends UpdateByPrimaryKeyWithoutBLOBsMethodGenerator {
+        extends UpdateByPrimaryKeyWithoutBLOBsMethodGenerator {
 
-  private boolean isSimple;
+    private boolean isSimple;
 
-  public AnnotatedUpdateByPrimaryKeyWithoutBLOBsMethodGenerator(boolean isSimple) {
-    super();
-    this.isSimple = isSimple;
-  }
-
-  @Override
-  public void addMapperAnnotations(Method method) {
-
-    method.addAnnotation("@Update({"); //$NON-NLS-1$
-
-    StringBuilder sb = new StringBuilder();
-    javaIndent(sb, 1);
-    sb.append("\"update "); //$NON-NLS-1$
-    sb.append(escapeStringForJava(introspectedTable.getFullyQualifiedTableNameAtRuntime()));
-    sb.append("\","); //$NON-NLS-1$
-    method.addAnnotation(sb.toString());
-
-    // set up for first column
-    sb.setLength(0);
-    javaIndent(sb, 1);
-    sb.append("\"set "); //$NON-NLS-1$
-
-    Iterator<IntrospectedColumn> iter;
-    if (isSimple) {
-      iter = ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())
-          .iterator();
-    } else {
-      iter =
-          ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getBaseColumns()).iterator();
+    public AnnotatedUpdateByPrimaryKeyWithoutBLOBsMethodGenerator(boolean isSimple) {
+        super();
+        this.isSimple = isSimple;
     }
 
-    while (iter.hasNext()) {
-      IntrospectedColumn introspectedColumn = iter.next();
+    @Override
+    public void addMapperAnnotations(Method method) {
 
-      sb.append(escapeStringForJava(getEscapedColumnName(introspectedColumn)));
-      sb.append(" = "); //$NON-NLS-1$
-      sb.append(getParameterClause(introspectedColumn));
+        method.addAnnotation("@Update({"); //$NON-NLS-1$
 
-      if (iter.hasNext()) {
-        sb.append(',');
-      }
+        StringBuilder sb = new StringBuilder();
+        javaIndent(sb, 1);
+        sb.append("\"update "); //$NON-NLS-1$
+        sb.append(escapeStringForJava(introspectedTable.getFullyQualifiedTableNameAtRuntime()));
+        sb.append("\","); //$NON-NLS-1$
+        method.addAnnotation(sb.toString());
 
-      sb.append("\","); //$NON-NLS-1$
-      method.addAnnotation(sb.toString());
-
-      // set up for the next column
-      if (iter.hasNext()) {
+        // set up for first column
         sb.setLength(0);
         javaIndent(sb, 1);
-        sb.append("  \""); //$NON-NLS-1$
-      }
+        sb.append("\"set "); //$NON-NLS-1$
+
+        Iterator<IntrospectedColumn> iter;
+        if (isSimple) {
+            iter = ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())
+                    .iterator();
+        } else {
+            iter =
+                    ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getBaseColumns()).iterator();
+        }
+
+        while (iter.hasNext()) {
+            IntrospectedColumn introspectedColumn = iter.next();
+
+            sb.append(escapeStringForJava(getEscapedColumnName(introspectedColumn)));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(getParameterClause(introspectedColumn));
+
+            if (iter.hasNext()) {
+                sb.append(',');
+            }
+
+            sb.append("\","); //$NON-NLS-1$
+            method.addAnnotation(sb.toString());
+
+            // set up for the next column
+            if (iter.hasNext()) {
+                sb.setLength(0);
+                javaIndent(sb, 1);
+                sb.append("  \""); //$NON-NLS-1$
+            }
+        }
+
+        boolean and = false;
+        iter = introspectedTable.getPrimaryKeyColumns().iterator();
+        while (iter.hasNext()) {
+            sb.setLength(0);
+            javaIndent(sb, 1);
+            if (and) {
+                sb.append("  \"and "); //$NON-NLS-1$
+            } else {
+                sb.append("\"where "); //$NON-NLS-1$
+                and = true;
+            }
+
+            IntrospectedColumn introspectedColumn = iter.next();
+            sb.append(escapeStringForJava(getEscapedColumnName(introspectedColumn)));
+            sb.append(" = "); //$NON-NLS-1$
+            sb.append(getParameterClause(introspectedColumn));
+            sb.append('\"');
+            if (iter.hasNext()) {
+                sb.append(',');
+            }
+            method.addAnnotation(sb.toString());
+        }
+
+        method.addAnnotation("})"); //$NON-NLS-1$
     }
 
-    boolean and = false;
-    iter = introspectedTable.getPrimaryKeyColumns().iterator();
-    while (iter.hasNext()) {
-      sb.setLength(0);
-      javaIndent(sb, 1);
-      if (and) {
-        sb.append("  \"and "); //$NON-NLS-1$
-      } else {
-        sb.append("\"where "); //$NON-NLS-1$
-        and = true;
-      }
-
-      IntrospectedColumn introspectedColumn = iter.next();
-      sb.append(escapeStringForJava(getEscapedColumnName(introspectedColumn)));
-      sb.append(" = "); //$NON-NLS-1$
-      sb.append(getParameterClause(introspectedColumn));
-      sb.append('\"');
-      if (iter.hasNext()) {
-        sb.append(',');
-      }
-      method.addAnnotation(sb.toString());
+    @Override
+    public void addExtraImports(Interface interfaze) {
+        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Update")); //$NON-NLS-1$
     }
-
-    method.addAnnotation("})"); //$NON-NLS-1$
-  }
-
-  @Override
-  public void addExtraImports(Interface interfaze) {
-    interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Update")); //$NON-NLS-1$
-  }
 }

@@ -1,11 +1,11 @@
 /**
  * Copyright 2006-2017 the original author or authors.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -25,84 +25,84 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 
 /**
  * Generates the Update By Example without BLOBs method.
- * 
+ *
  * @author Jeff Butler
- * 
+ *
  */
 public class UpdateByExampleWithoutBLOBsMethodGenerator extends AbstractDAOElementGenerator {
 
-  private boolean generateForJava5;
+    private boolean generateForJava5;
 
-  public UpdateByExampleWithoutBLOBsMethodGenerator(boolean generateForJava5) {
-    super();
-    this.generateForJava5 = generateForJava5;
-  }
-
-  @Override
-  public void addImplementationElements(TopLevelClass topLevelClass) {
-    Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-    Method method = getMethodShell(importedTypes);
-    if (generateForJava5) {
-      method.addAnnotation("@Override"); //$NON-NLS-1$
+    public UpdateByExampleWithoutBLOBsMethodGenerator(boolean generateForJava5) {
+        super();
+        this.generateForJava5 = generateForJava5;
     }
 
-    method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
+    @Override
+    public void addImplementationElements(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Method method = getMethodShell(importedTypes);
+        if (generateForJava5) {
+            method.addAnnotation("@Override"); //$NON-NLS-1$
+        }
 
-    StringBuilder sb = new StringBuilder();
-    sb.append("int rows = "); //$NON-NLS-1$
-    sb.append(daoTemplate.getUpdateMethod(introspectedTable.getIbatis2SqlMapNamespace(),
-        introspectedTable.getUpdateByExampleStatementId(), "parms")); //$NON-NLS-1$
-    method.addBodyLine(sb.toString());
+        method.addBodyLine("UpdateByExampleParms parms = new UpdateByExampleParms(record, example);"); //$NON-NLS-1$
 
-    method.addBodyLine("return rows;"); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder();
+        sb.append("int rows = "); //$NON-NLS-1$
+        sb.append(daoTemplate.getUpdateMethod(introspectedTable.getIbatis2SqlMapNamespace(),
+                introspectedTable.getUpdateByExampleStatementId(), "parms")); //$NON-NLS-1$
+        method.addBodyLine(sb.toString());
 
-    if (context.getPlugins().clientUpdateByExampleWithoutBLOBsMethodGenerated(method, topLevelClass,
-        introspectedTable)) {
-      topLevelClass.addImportedTypes(importedTypes);
-      topLevelClass.addMethod(method);
-    }
-  }
+        method.addBodyLine("return rows;"); //$NON-NLS-1$
 
-  @Override
-  public void addInterfaceElements(Interface interfaze) {
-    if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
-      Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-      Method method = getMethodShell(importedTypes);
-
-      if (context.getPlugins().clientUpdateByExampleWithoutBLOBsMethodGenerated(method, interfaze,
-          introspectedTable)) {
-        interfaze.addImportedTypes(importedTypes);
-        interfaze.addMethod(method);
-      }
-    }
-  }
-
-  private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
-    FullyQualifiedJavaType parameterType;
-    if (introspectedTable.getRules().generateBaseRecordClass()) {
-      parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
-    } else {
-      parameterType = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
+        if (context.getPlugins().clientUpdateByExampleWithoutBLOBsMethodGenerated(method, topLevelClass,
+                introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 
-    importedTypes.add(parameterType);
+    @Override
+    public void addInterfaceElements(Interface interfaze) {
+        if (getExampleMethodVisibility() == JavaVisibility.PUBLIC) {
+            Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+            Method method = getMethodShell(importedTypes);
 
-    Method method = new Method();
-    method.setVisibility(getExampleMethodVisibility());
-    method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-    method.setName(
-        getDAOMethodNameCalculator().getUpdateByExampleWithoutBLOBsMethodName(introspectedTable));
-    method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
-    method.addParameter(
-        new Parameter(new FullyQualifiedJavaType(introspectedTable.getExampleType()), "example")); //$NON-NLS-1$
-
-    for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
-      method.addException(fqjt);
-      importedTypes.add(fqjt);
+            if (context.getPlugins().clientUpdateByExampleWithoutBLOBsMethodGenerated(method, interfaze,
+                    introspectedTable)) {
+                interfaze.addImportedTypes(importedTypes);
+                interfaze.addMethod(method);
+            }
+        }
     }
 
-    context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
+    private Method getMethodShell(Set<FullyQualifiedJavaType> importedTypes) {
+        FullyQualifiedJavaType parameterType;
+        if (introspectedTable.getRules().generateBaseRecordClass()) {
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType());
+        } else {
+            parameterType = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
+        }
 
-    return method;
-  }
+        importedTypes.add(parameterType);
+
+        Method method = new Method();
+        method.setVisibility(getExampleMethodVisibility());
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.setName(
+                getDAOMethodNameCalculator().getUpdateByExampleWithoutBLOBsMethodName(introspectedTable));
+        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        method.addParameter(
+                new Parameter(new FullyQualifiedJavaType(introspectedTable.getExampleType()), "example")); //$NON-NLS-1$
+
+        for (FullyQualifiedJavaType fqjt : daoTemplate.getCheckedExceptions()) {
+            method.addException(fqjt);
+            importedTypes.add(fqjt);
+        }
+
+        context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
+
+        return method;
+    }
 }

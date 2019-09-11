@@ -21,39 +21,7 @@ import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.XmlConstants;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.AbstractXmlElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BaseColumnListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BaseColumnListWithoutIdElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BatchInsertElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BatchInsertOnDuplicateKeyElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BatchInsertValueListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BatchInsertValuesOnDuplicateKeyListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BatchUpdateElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.BlobColumnListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.CountByExampleElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteByExampleElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteByPrimaryKeyElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteInElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ExampleWhereClauseElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertColumnListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertSelectiveElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertValueListElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByExampleWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectByPrimaryKeyElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectInWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SelectOneByExampleWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.TableNameElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExampleSelectiveElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExampleWithBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByExampleWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeySelectiveElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeyWithBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeyWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateSetFromBeanListElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
 
 /**
  *
@@ -116,6 +84,9 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
         this.addSelectInWithoutBLOBsElement(answer);
 
         this.addCountByExampleElement(answer);
+    this.addCountByPagerElement(answer);
+
+    this.addSelectByPagerWithoutBLOBsElement(answer);
 
         return answer;
     }
@@ -306,6 +277,21 @@ public class XMLMapperGenerator extends AbstractXmlGenerator {
             this.initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
+
+  protected void addCountByPagerElement(XmlElement parentElement) {
+    if (this.introspectedTable.getRules().generateCountByExample()) {
+      AbstractXmlElementGenerator elementGenerator = new CountByPagerElementGenerator();
+      this.initializeAndExecuteGenerator(elementGenerator, parentElement);
+    }
+  }
+
+  protected void addSelectByPagerWithoutBLOBsElement(XmlElement parentElement) {
+    if (this.introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+      AbstractXmlElementGenerator elementGenerator =
+          new SelectByPagerWithoutBLOBsElementGenerator();
+      this.initializeAndExecuteGenerator(elementGenerator, parentElement);
+    }
+  }
 
     protected void addUpdateByExampleSelectiveElement(XmlElement parentElement) {
         if (this.introspectedTable.getRules().generateUpdateByExampleSelective()) {

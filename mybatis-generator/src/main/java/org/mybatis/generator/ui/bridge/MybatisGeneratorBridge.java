@@ -23,6 +23,7 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
+import org.mybatis.generator.ui.AppProperties;
 import org.mybatis.generator.ui.model.DatabaseConfig;
 import org.mybatis.generator.ui.model.GeneratorConfig;
 import org.mybatis.generator.ui.util.DbUtils;
@@ -138,12 +139,13 @@ public class MybatisGeneratorBridge {
             javaClientGeneratorConfig.addProperty("serviceImplRootClass",
                     "com.github.xionghuicoder.microservice.common.service.sharding.impl.AbstractCrudShardingService");
         } else {
+            String baseMybatisPackage= AppProperties.getValue("base_mybatis_package");
             javaClientGeneratorConfig.addProperty("rootInterface",
-                    "com.github.xionghuicoder.microservice.common.dao.repository.CrudRepository");
+                     "ltd.pdx.commons.mybatis.data.CrudRepository");
             javaClientGeneratorConfig.addProperty("serviceRootInterface",
-                    "com.github.xionghuicoder.microservice.common.service.CrudService");
+                    baseMybatisPackage + ".service.CrudService");
             javaClientGeneratorConfig.addProperty("serviceImplRootClass",
-                    "com.github.xionghuicoder.microservice.common.service.impl.AbstractCrudService");
+                    baseMybatisPackage + ".service.CrudService");
         }
         javaClientGeneratorConfig.addProperty("enableRepository",
                 String.valueOf(this.generatorConfig.isBuildMapper()));
